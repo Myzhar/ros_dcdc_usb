@@ -25,36 +25,36 @@ void dcdc_parse_mem(unsigned char *data);
 
 /* from windows source with small sanity edits */
 
-#define STATUS_OK			0x00
+#define STATUS_OK               0x00
 #define STATUS_ERASE			0x01
 #define STATUS_WRITE			0x02
-#define STATUS_READ			0x03
+#define STATUS_READ             0x03
 #define STATUS_ERROR			0xff
 
-#define DCDCUSB_GET_ALL_VALUES		0x81
-#define DCDCUSB_RECV_ALL_VALUES		0x82
+#define DCDCUSB_GET_ALL_VALUES	0x81
+#define DCDCUSB_RECV_ALL_VALUES	0x82
 #define DCDCUSB_CMD_OUT			0xB1
 #define DCDCUSB_CMD_IN			0xB2
-#define DCDCUSB_MEM_READ_OUT		0xA1
+#define DCDCUSB_MEM_READ_OUT	0xA1
 #define DCDCUSB_MEM_READ_IN		0xA2
-#define DCDCUSB_MEM_WRITE_OUT		0xA3
-#define DCDCUSB_MEM_WRITE_IN		0xA4
+#define DCDCUSB_MEM_WRITE_OUT	0xA3
+#define DCDCUSB_MEM_WRITE_IN	0xA4
 #define DCDCUSB_MEM_ERASE		0xA5
 
-#define INTERNAL_MESG			0xFF
+#define INTERNAL_MESG               0xFF
 #define INTERNAL_MESG_DISCONNECTED	0x01
 
-#define CMD_SET_AUX_WIN			0x01
-#define CMD_SET_PW_SWITCH		0x02
-#define CMD_SET_OUTPUT			0x03
-#define CMD_WRITE_VOUT			0x06
-#define CMD_READ_VOUT			0x07
-#define CMD_INC_VOUT			0x0C
-#define CMD_DEC_VOUT			0x0D
-#define CMD_LOAD_DEFAULTS		0x0E
-#define CMD_SCRIPT_START		0x10
-#define CMD_SCRIPT_STOP			0x11
-#define CMD_SLEEP			0x12
+#define CMD_SET_AUX_WIN             0x01
+#define CMD_SET_PW_SWITCH       	0x02
+#define CMD_SET_OUTPUT          	0x03
+#define CMD_WRITE_VOUT          	0x06
+#define CMD_READ_VOUT           	0x07
+#define CMD_INC_VOUT            	0x0C
+#define CMD_DEC_VOUT            	0x0D
+#define CMD_LOAD_DEFAULTS       	0x0E
+#define CMD_SCRIPT_START        	0x10
+#define CMD_SCRIPT_STOP             0x11
+#define CMD_SLEEP                   0x12
 #define CMD_READ_REGULATOR_STEP		0x13
 
 /* For reading out memory */
@@ -69,7 +69,7 @@ void dcdc_parse_mem(unsigned char *data);
 #define KEYBD_REPORT_ERASE_MEMORY	0xB2 /* same as F2 but in keyboard mode */
 #define KEYBD_REPORT_READ_MEMORY	0xB3 /* same as F3 but in keyboard mode */
 #define KEYBD_REPORT_WRITE_MEMORY	0xB4 /* same as F4 but in keyboard mode */
-#define KEYBD_REPORT_MEMORY		0x41 /* response to b3,b4 */
+#define KEYBD_REPORT_MEMORY         0x41 /* response to b3,b4 */
 
 #define IN_REPORT_EXT_EE_DATA		0x31
 #define OUT_REPORT_EXT_EE_READ		0xA1

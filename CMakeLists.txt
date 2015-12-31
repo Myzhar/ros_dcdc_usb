@@ -21,10 +21,9 @@ endif()
 # LIBRARIES
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/")
 
+# LibUSB-0.1
 find_package(libusb REQUIRED)
-if(LIBUSB_FOUND)
 include_directories (${LIBUSB_INCLUDE_DIRS})
-endif(LIBUSB_FOUND)
 #########################################################
 
 #########################################################
@@ -48,11 +47,25 @@ file(GLOB_RECURSE HDR *.h)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  message_generation
+  diagnostic_msgs
+  diagnostic_updater
+)
+
+add_message_files(
+  FILES
+  DCDCStatus.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
 )
 
 catkin_package(
   CATKIN_DEPENDS
     std_msgs
+    message_runtime
     diagnostic_msgs
     diagnostic_updater
 )
