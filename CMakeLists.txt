@@ -43,6 +43,13 @@ file(GLOB_RECURSE HDR *.h)
 #########################################################
 
 #########################################################
+# MSG FILES
+# Adding MSG files to project source, without compiling them
+file(GLOB_RECURSE MSG . *.msg)
+set_source_files_properties(${MSG} PROPERTIES HEADER_FILE_ONLY TRUE)
+#########################################################
+
+#########################################################
 #CATKIN
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -64,10 +71,10 @@ generate_messages(
 
 catkin_package(
   CATKIN_DEPENDS
-    std_msgs
-    message_runtime
-    diagnostic_msgs
-    diagnostic_updater
+  std_msgs
+  message_runtime
+  diagnostic_msgs
+  diagnostic_updater
 )
 
 include_directories(${catkin_INCLUDE_DIRS})
@@ -80,6 +87,7 @@ add_executable(
     dcdc_usb_node
     ${HDR}
     ${SRC}
+    ${MSG}
 )
 
 target_link_libraries(
