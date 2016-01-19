@@ -11,7 +11,7 @@ https://github.com/husky/husky_robot/blob/indigo-devel/husky_base/src/husky_diag
 CDCDCDiagUpdaterTask::CDCDCDiagUpdaterTask(ros_dcdc_usb::DCDCStatus &msg , DCDCLevels &levels)
     : DiagnosticTask("dcdc_usb_status")
     , mStatusMsg(msg)
-    , mConnected(true)
+    , mConnected(false)
 {
     mLevels.criticalLowInput = levels.criticalLowInput;
     mLevels.warningLowInput = levels.warningLowInput;
