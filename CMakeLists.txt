@@ -37,7 +37,7 @@ include_directories(${INC_PATH})
 
 #########################################################
 # SOURCES
-file(GLOB_RECURSE SRC *.cpp *.c)
+file(GLOB_RECURSE SRC *.cpp)
 # HEADERS
 file(GLOB_RECURSE HDR *.h)
 #########################################################

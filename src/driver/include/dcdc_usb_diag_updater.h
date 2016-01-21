@@ -3,6 +3,8 @@
 #include <diagnostic_updater/publisher.h>
 #include <ros_dcdc_usb/DCDCStatus.h>
 
+#include "dcdc-usb.h"
+
 typedef struct _dcdcLevels
 {
     double criticalLowInput; //!< Critical power input level (e.g. 12.3V for 4S lithium battery)
@@ -18,8 +20,16 @@ public:
 
     void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
 
+protected:
+    bool connect();
+
 private:
     DCDCLevels mLevels;
     ros_dcdc_usb::DCDCStatus& mStatusMsg;
     bool mConnected;
+
+    usb_dev_handle* mUsbHandle;
+
+    double mLastVout;
+    double mLastVin;
 };

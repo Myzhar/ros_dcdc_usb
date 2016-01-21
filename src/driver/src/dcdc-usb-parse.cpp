@@ -41,9 +41,9 @@ static int byte2bits(unsigned char c)
     int i,n = 0;
     for (i = 0; i < 8; i++)
     {
-	n = n * 10;
-	if ((c >> i) & 1)
-	    n = n + 1;
+        n = n * 10;
+        if ((c >> i) & 1)
+            n = n + 1;
     }
     return n;
 }
@@ -54,6 +54,34 @@ static double byte2vout(unsigned char c)
     double voltage = (double)80 * ((double) 1 + CT_R1/(rpot + CT_R2));
     voltage = floor(voltage);
     return voltage/100;
+}
+
+void dcdc_parse_values_struct( unsigned char *data, DCDCStatus& status )
+{
+    status.mode = data[1];
+    status.state = data[2];
+    status.input_voltage = (float) data[3] * 0.1558f;
+    status.ignition_voltage = (float) data[4] * 0.1558f;
+    status.output_voltage = (float) data[5] * 0.1170f;
+    status.status = data[6];
+
+    status.time_config = ((status.mode >> 5) & 0x07);
+    status.voltage_config = ((status.mode >> 2) & 0x07);
+    status.pow_switch = (status.status & 0x04);
+    status.out_enable = (status.status & 0x08);
+    status.aux_vin_enable = (status.status & 0x10);
+    status.status_flags_1 = byte2bits(data[6]);
+    status.status_flags_2 = byte2bits(data[7]);
+    status.timer_flags = byte2bits(data[9]);
+    status.flash_ptr = data[10];
+    status.timer_wait = bytes2int(data[11], data[12]);
+    status.timer_vout = bytes2int(data[13], data[14]);
+    status.timer_vaux = bytes2int(data[15], data[16]);
+    status.timer_pw_switch = bytes2int(data[17], data[18]);
+    status.timer_off_delay = bytes2int(data[19], data[20]);
+    status.timer_hard_off = bytes2int(data[21], data[22]);
+    status.version_h = ((data[23] >> 5) & 0x07);
+    status.version_l = (data[23] & 0x1F);
 }
 
 void dcdc_parse_values(unsigned char *data)
@@ -69,10 +97,10 @@ void dcdc_parse_values(unsigned char *data)
     status = data[6];
     switch(mode & 0x03)
     {
-	case 0: P("mode: 0 (dumb)"); break;
-	case 1: P("mode: 1 (automotive)"); break;
-	case 2: P("mode: 2 (script)"); break;
-	case 3: P("mode: 3 (ups)");break;
+    case 0: P("mode: 0 (dumb)"); break;
+    case 1: P("mode: 1 (automotive)"); break;
+    case 2: P("mode: 2 (script)"); break;
+    case 3: P("mode: 3 (ups)");break;
     }
     P("time config: %d", (mode >> 5) & 0x07);
     P("voltage config: %d", (mode >> 2) & 0x07);
@@ -102,21 +130,21 @@ void dcdc_parse_cmd(unsigned char *data)
 {
     if (data[1] == 0)
     {
-	if (data[2] == CMD_READ_REGULATOR_STEP)
-	{
-	    P("regulator step: %d", data[3]);
-	}
-	else
-	{
-	    P("output voltage: %.2f", byte2vout(data[3]));
-	}
+        if (data[2] == CMD_READ_REGULATOR_STEP)
+        {
+            P("regulator step: %d", data[3]);
+        }
+        else
+        {
+            P("output voltage: %.2f", byte2vout(data[3]));
+        }
     }
-    else 
+    else
     {
-	if (data[2] == CMD_READ_REGULATOR_STEP)
-	{
-	    P("regulator step not defined");
-	}
+        if (data[2] == CMD_READ_REGULATOR_STEP)
+        {
+            P("regulator step not defined");
+        }
     }
 }
 

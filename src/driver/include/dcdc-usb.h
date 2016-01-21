@@ -5,6 +5,37 @@
 #define DCDC_PID	0xd003
 
 #define MAX_TRANSFER_SIZE	24
+
+typedef struct _dcdc_status
+{
+    int mode;
+    int state;
+    int status;
+
+    double ignition_voltage;
+    double input_voltage;
+    double output_voltage;
+
+    int time_config;
+    int voltage_config;
+    int pow_switch;
+    int out_enable;
+    int aux_vin_enable;
+    int status_flags_1;
+    int status_flags_2;
+    int v_flags;
+    int timer_flags;
+    int flash_ptr;
+    int timer_wait;
+    int timer_vout;
+    int timer_vaux;
+    int timer_pw_switch;
+    int timer_off_delay;
+    int timer_hard_off;
+    int version_h;
+    int version_l;
+} DCDCStatus;
+
 /* USB communication wrappers */
 struct usb_dev_handle * dcdc_connect();
 int dcdc_send(struct usb_dev_handle *h, unsigned char *data, int size);
@@ -17,8 +48,15 @@ int dcdc_set_vout(struct usb_dev_handle *h, double vout);
 int dcdc_get_vout(struct usb_dev_handle *h, unsigned char *buf, int buflen);
 int dcdc_parse_data(unsigned char *data, int size);
 
+int dcdc_read_status(struct usb_dev_handle *h, DCDCStatus& status );
+
+/* DCDC Get Values */
+int dcdc_read_vout( double* vout );
+int dcdc_read_vin(double* vin );
+
 /* DCDC USB data parsing */
 void dcdc_parse_values(unsigned char *data);
+void dcdc_parse_values_struct( unsigned char *data, DCDCStatus& status );
 void dcdc_parse_cmd(unsigned char *data);
 void dcdc_parse_internal_msg(unsigned char *data);
 void dcdc_parse_mem(unsigned char *data);

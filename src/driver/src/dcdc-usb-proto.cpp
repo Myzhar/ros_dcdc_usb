@@ -77,6 +77,19 @@ int dcdc_get_status(struct usb_dev_handle *h, unsigned char *buf, int buflen)
     return ret;
 }
 
+int dcdc_read_status(struct usb_dev_handle *h, DCDCStatus &status )
+{
+    unsigned char data[MAX_TRANSFER_SIZE];
+    int ret = dcdc_get_status(h, data, MAX_TRANSFER_SIZE);
+
+    if( ret <=0 )
+        return ret;
+
+    dcdc_parse_values_struct( data, status );
+
+    return 1;
+}
+
 int dcdc_set_vout(struct usb_dev_handle *h, double vout)
 {
     if (vout < 5) vout = 5;
@@ -99,6 +112,16 @@ int dcdc_get_vout(struct usb_dev_handle *h, unsigned char *buf, int buflen)
     ret = dcdc_recv(h, buf, MAX_TRANSFER_SIZE, 1000);
 
     return ret;
+}
+
+int dcdc_read_vout( double* vout )
+{
+
+}
+
+int dcdc_read_vin( double* vin )
+{
+
 }
 
 int dcdc_parse_data(unsigned char *data, int size)

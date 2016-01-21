@@ -21,6 +21,7 @@ void loadParams( ros::NodeHandle& nh )
     else
         ROS_DEBUG_STREAM( "criticalLowInput" << val );
     levels.criticalLowInput = val;
+    ROS_INFO_STREAM( "Critical Low input level: " << val << "V" );
 
     val = 13.0;
     if( !nh.getParam( "warningLowInput", val ) )
@@ -31,6 +32,7 @@ void loadParams( ros::NodeHandle& nh )
     else
         ROS_DEBUG_STREAM( "warningLowInput" << val );
     levels.warningLowInput = val;
+    ROS_INFO_STREAM( "Warning Low input level: " << val << "V" );
 
     val = 12.0;
     if( !nh.getParam( "output", val ) )
@@ -41,8 +43,9 @@ void loadParams( ros::NodeHandle& nh )
     else
         ROS_DEBUG_STREAM( "output" << val );
     levels.output = val;
+    ROS_INFO_STREAM( "Output level: " << val << "V" );
 
-    val = 0.1;
+    val = 0.3;
     if( !nh.getParam( "outputToll", val ) )
     {
         nh.setParam( "outputToll", val );
@@ -51,6 +54,7 @@ void loadParams( ros::NodeHandle& nh )
     else
         ROS_DEBUG_STREAM( "outputToll" << val );
     levels.outputToll = val;
+    ROS_INFO_STREAM( "Output tollerance value: +/- " << val << "V" );
 
     ROS_INFO_STREAM( "Parameters loaded" );
 }

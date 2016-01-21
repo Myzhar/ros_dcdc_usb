@@ -12,6 +12,7 @@ CDCDCDiagUpdaterTask::CDCDCDiagUpdaterTask(ros_dcdc_usb::DCDCStatus &msg , DCDCL
     : DiagnosticTask("dcdc_usb_status")
     , mStatusMsg(msg)
     , mConnected(false)
+    , mUsbHandle(NULL)
 {
     mLevels.criticalLowInput = levels.criticalLowInput;
     mLevels.warningLowInput = levels.warningLowInput;
@@ -19,22 +20,57 @@ CDCDCDiagUpdaterTask::CDCDCDiagUpdaterTask(ros_dcdc_usb::DCDCStatus &msg , DCDCL
     mLevels.outputToll = levels.outputToll;
 
     mStatusMsg.header.frame_id = "DCDC-USB-Status";
+
+    mConnected = connect();
+}
+
+bool CDCDCDiagUpdaterTask::connect()
+{
+    mUsbHandle = dcdc_connect();
+
+    if(mUsbHandle)
+    {
+        if( dcdc_setup(mUsbHandle)!=0 )
+        {
+            ROS_ERROR_STREAM( "DCDC-USB CONNECTION FAILED");
+            return false;
+        }
+        else
+        {
+            ROS_INFO_STREAM( "DCDC-USB Connected");
+            return true;
+        }
+    }
+
+    ROS_ERROR_STREAM( "DCDC-USB CONNECTION FAILED");
+    return false;
 }
 
 void CDCDCDiagUpdaterTask::run( diagnostic_updater::DiagnosticStatusWrapper &stat )
 {
-
     double inV;
     double outV;
 
+    DCDCStatus status;
+
     if( !mConnected )
     {
-        inV = 0.0;
-        outV = 0.0;
+        stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Power System NOT CONNECTED");
+        stat.add( "Connected", mConnected );
+
+        mConnected = connect(); // Trying to connect again
+        return;
     }
     else
     {
-        // TODO read status from DCDC-USB
+        if( dcdc_read_status( mUsbHandle, status ) <= 0 )
+        {
+            stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "DCDC-USB communication failed");
+            return;
+        }
+
+        inV = status.input_voltage;
+        outV = status.output_voltage;
     }
 
     // >>>>> Diagnostic messages
@@ -61,11 +97,11 @@ void CDCDCDiagUpdaterTask::run( diagnostic_updater::DiagnosticStatusWrapper &sta
             stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::OK, "Input power OK: %5.2fV", inV);
         }
 
-        if( outV > mLevels.output+mLevels.outputToll )
+        if( outV > (mLevels.output+mLevels.outputToll) )
         {
             stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::ERROR, "Output level OVER tollerance: %5.2fV", outV);
         }
-        else if( outV < mLevels.output+mLevels.outputToll )
+        else if( outV < (mLevels.output-mLevels.outputToll) )
         {
             stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::ERROR, "Output level UNDER tollerance: %5.2fV", outV);
         }
