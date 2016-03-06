@@ -79,7 +79,7 @@ int main(int argc, char** argv)
     diagnostic_updater.setHardwareID( "DCDC-USB");
     diagnostic_updater.add( dcdcUpdTask );
 
-    ros::Rate r(10); // 10 hz
+    ros::Rate r(100); // 10 hz
     while( ros::ok() )
     {
         // We force the update of the diagnostic
